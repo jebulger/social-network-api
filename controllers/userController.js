@@ -1,6 +1,9 @@
+// Importing User and Thought models
 const { User, Thought } = require("../models");
 
+// userController is exported with methods to be used in userRoutes
 const userController = {
+  // Method for getting all users
   getUsers: async (req, res) => {
     try {
       const users = await User.find();
@@ -9,6 +12,8 @@ const userController = {
       res.status(500).json(err);
     }
   },
+  // Gets a single user by finding its ID
+  // also populating their thoughts, reactions, and friends
   getSingleUser: async (req, res) => {
     try {
       const user = await User.findOne({ _id: req.params.userId })
@@ -29,6 +34,7 @@ const userController = {
       res.status(500).json(err);
     }
   },
+  // Creates a new user
   createUser: async (req, res) => {
     try {
       const user = await User.create(req.body);
@@ -37,6 +43,7 @@ const userController = {
       res.status(500).json(err);
     }
   },
+  // Finds user by ID and updates with newly passed body
   updateUser: async (req, res) => {
     try {
       const updatedUser = await User.findOneAndUpdate(
@@ -52,6 +59,7 @@ const userController = {
       res.status(500).json(err);
     }
   },
+  // Finds user by ID and deletes the account and their associated thoughts
   deleteUser: async (req, res) => {
     try {
       const user = await User.findOneAndDelete({ _id: req.params.userId });
@@ -66,6 +74,8 @@ const userController = {
       res.status(500).json(err);
     }
   },
+  // Finds user by ID and adds a friend to their list by finding
+  // that friend's ID, updates the user info with new friend
   addFriend: async (req, res) => {
     try {
       const updatedUser = await User.findOneAndUpdate(
@@ -85,6 +95,8 @@ const userController = {
       res.status(500).json(err);
     }
   },
+  // Finds user by ID, removes friend by ID, and updates the user
+  // to reflect the removal
   removeFriend: async (req, res) => {
     try {
       const userId = req.params.userId;

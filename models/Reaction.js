@@ -1,5 +1,7 @@
+// Importing Schema class from mongoose
 const { Schema } = require("mongoose");
 
+// Declaring reactionSchema as a new Schema
 const reactionSchema = new Schema(
   {
     reactionId: {
@@ -28,4 +30,5 @@ const reactionSchema = new Schema(
   }
 );
 
+// Exporting schema
 module.exports = reactionSchema;

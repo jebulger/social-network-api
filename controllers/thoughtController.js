@@ -1,6 +1,9 @@
+// Importing Thought and User models
 const { Thought, User } = require("../models");
 
+// thoughtController is exported with methods to be used in thoughtRoutes
 const thoughtController = {
+  // Gets all thoughts in the db
   getThoughts: async (req, res) => {
     try {
       const thoughts = await Thought.find();
@@ -9,6 +12,7 @@ const thoughtController = {
       res.status(500).json(err);
     }
   },
+  // Grabs a single thought by finding its ID
   getSingleThought: async (req, res) => {
     try {
       const thought = await Thought.findOne({ _id: req.params.thoughtId });
@@ -22,20 +26,22 @@ const thoughtController = {
       res.status(500).json(err);
     }
   },
+  // Creates a thought and updates its corresponding user
   createThought: async (req, res) => {
     try {
       const thought = await Thought.create(req.body);
       const user = await User.findOneAndUpdate(
-        { username: req.body.username }, // Use req.body.username to get the username of the user who created the thought
-        { $push: { thoughts: thought._id } }, // Add the thought ID to the user's thoughts array
+        { username: req.body.username },
+        { $push: { thoughts: thought._id } },
         { new: true }
       );
-  
+
       res.json(thought);
     } catch (err) {
       res.status(500).json(err);
     }
   },
+  // Finds a thought by its ID and updates the thought
   updateThought: async (req, res) => {
     try {
       const updatedThought = await Thought.findOneAndUpdate(
@@ -54,16 +60,21 @@ const thoughtController = {
       res.status(500).json(err);
     }
   },
+  // Finds a thought's ID and deletes it
   deleteThought: async (req, res) => {
     try {
       const thought = await Thought.findOneAndDelete({
         _id: req.params.thoughtId,
       });
-  
+
       if (!thought) {
-        return res.status(404).json({ message: "No thought found with that ID" });
+        return res
+          .status(404)
+          .json({ message: "No thought found with that ID" });
       }
-  
+
+      // Updates the user info to reflect deleted thought
+      // finds the user by username
       const user = await User.findOneAndUpdate(
         { username: thought.username },
         { $pull: { thoughts: req.params.thoughtId } },
@@ -75,6 +86,8 @@ const thoughtController = {
       res.status(500).json(err);
     }
   },
+  // Finds a thought by its ID and pushes a reaction into it
+  // updates the thought with the newly added reaction
   createReaction: async (req, res) => {
     try {
       const updatedThought = await Thought.findOneAndUpdate(
@@ -94,6 +107,8 @@ const thoughtController = {
       res.status(500).json(err);
     }
   },
+  // Finds a thought by its ID, then removes a reaction
+  // by finding that reactions ID and updates the thought
   removeReaction: async (req, res) => {
     try {
       const updatedThought = await Thought.findOneAndUpdate(
