@@ -26,11 +26,11 @@ const thoughtController = {
     try {
       const thought = await Thought.create(req.body);
       const user = await User.findOneAndUpdate(
-        { _id: req.params.userId },
-        { $push: { thoughts: thought._id } },
+        { username: req.body.username }, // Use req.body.username to get the username of the user who created the thought
+        { $push: { thoughts: thought._id } }, // Add the thought ID to the user's thoughts array
         { new: true }
       );
-
+  
       res.json(thought);
     } catch (err) {
       res.status(500).json(err);
@@ -59,17 +59,16 @@ const thoughtController = {
       const thought = await Thought.findOneAndDelete({
         _id: req.params.thoughtId,
       });
-
+  
       if (!thought) {
-        return res
-          .status(404)
-          .json({ message: "No thought found with that ID" });
+        return res.status(404).json({ message: "No thought found with that ID" });
       }
-
-      const userId = thought.userId;
-      const user = await User.findOneAndUpdate(userId, {
-        $pull: { thoguhts: thought._id },
-      });
+  
+      const user = await User.findOneAndUpdate(
+        { username: thought.username },
+        { $pull: { thoughts: req.params.thoughtId } },
+        { new: true }
+      );
 
       res.json({ message: "Thought has been successfully deleted" });
     } catch (err) {

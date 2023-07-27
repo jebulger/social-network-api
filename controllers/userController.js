@@ -13,6 +13,13 @@ const userController = {
     try {
       const user = await User.findOne({ _id: req.params.userId })
         .populate("thoughts")
+        .populate({
+          path: "thoughts",
+          populate: {
+            path: "reactions",
+            model: "Reaction",
+          },
+        })
         .populate("friends");
       if (!user) {
         return res.status(404).json({ message: "No user found with that ID" });
