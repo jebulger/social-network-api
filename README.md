@@ -1,7 +1,7 @@
 # Social Network API
 
 ## Description
-
+After recently being introduced to MongoDB and Mongoose, I needed a way to improve upon that foundation and my understanding of building NoSQL databases. This project serves as an API for a Social Network, where users can add friends, share their thoughts, and react to their friends' thoughts. The database allows for users to be created, updated, and deleted. It allows for users to add/remove friends, and friends can create/remove their reactions to thoughts that a user creates. The user's thoughts can aslo be updated and deleted. The application is strictly back-end, as that was my main focus while creating it, and is invoked in the command line. The requirements for running this are listed below, and the bottom of the readme contains a link to a walkthrough video on how to navigate the database.
 ## Installation
 Requirements:
 - Access to a command line tool
